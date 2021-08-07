@@ -22,6 +22,8 @@ var config = {
 var platforms;
 var player;
 var coins;
+var score = 0;
+var scoreText;
 
 /* game declaration */
 var game = new Phaser.Game(config);
@@ -93,6 +95,7 @@ function create () {
     /* In order to allow the played to collide with the platforms we can create a Collider object */
     this.physics.add.collider(player, platforms);
 
+    /* Creation conis in the scene, possition random */ 
     coins = this.physics.add.group();
     for(var i = 0; i < 10; i++){
         createCoinSprite();
@@ -101,6 +104,9 @@ function create () {
    
     this.physics.add.collider(coins, platforms);
     this.physics.add.overlap(player, coins, collectCoin, null, this);
+
+    /* Adding text score */
+    scoreText = this.add.text(20, 20, 'score: 0', {fontsize: '32px', fill: '#000'}); 
 }
 
 function update() {
@@ -135,6 +141,9 @@ function update() {
 
 function collectCoin (player, coin){
     coin.disableBody(true, true);
+
+    score += 10;
+    scoreText.setText('Score: ' + score);
 }
 
 function createCoinSprite() {

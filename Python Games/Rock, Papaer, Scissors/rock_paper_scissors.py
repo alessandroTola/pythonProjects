@@ -1,6 +1,7 @@
 from random import randint
 import os
 import time
+from playsound import playsound
 
 
 def print_intro():
@@ -195,13 +196,19 @@ def check_results(player, computer):
     time.sleep(3)
     os.system('cls' if os.name == 'nt' else 'clear')
     
+    __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    win = os.path.join(__location__, 'win.mp3')
+    lose = os.path.join(__location__, 'game_over.wav')
+    
     if(player == computer):
         print_draw()
     else:
         if((player == 0 and computer == 2) or (player>computer and not(player==2 and computer==0))):
             print_win()
+            playsound(win)
         else:
             print_lose()
+            playsound(lose)
 
 
 def play_game():

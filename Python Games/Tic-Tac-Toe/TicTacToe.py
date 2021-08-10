@@ -1,7 +1,30 @@
+import os
+import time
+from playsound import playsound
+from pathlib import Path
+
+
+def print_intro():
+    print("""
+        █░█░█ █▀▀ █░░ █▀▀ █▀█ █▀▄▀█ █▀▀   ▀█▀ █▀█
+        ▀▄▀▄▀ ██▄ █▄▄ █▄▄ █▄█ █░▀░█ ██▄   ░█░ █▄█
+        """)
+    print("""      
+        ████████╗██╗░█████╗░  ████████╗░█████╗░░█████╗░  ████████╗░█████╗░███████╗
+        ╚══██╔══╝██║██╔══██╗  ╚══██╔══╝██╔══██╗██╔══██╗  ╚══██╔══╝██╔══██╗██╔════╝
+        ░░░██║░░░██║██║░░╚═╝  ░░░██║░░░███████║██║░░╚═╝  ░░░██║░░░██║░░██║█████╗░░
+        ░░░██║░░░██║██║░░██╗  ░░░██║░░░██╔══██║██║░░██╗  ░░░██║░░░██║░░██║██╔══╝░░
+        ░░░██║░░░██║╚█████╔╝  ░░░██║░░░██║░░██║╚█████╔╝  ░░░██║░░░╚█████╔╝███████╗
+        ░░░╚═╝░░░╚═╝░╚════╝░  ░░░╚═╝░░░╚═╝░░╚═╝░╚════╝░  ░░░╚═╝░░░░╚════╝░╚══════╝
+        """)
+    print("""        
+        █▀▀ █▀█ █▀█ █▀▄   █░░ █░█ █▀▀ █▄▀ █
+        █▄█ █▄█ █▄█ █▄▀   █▄▄ █▄█ █▄▄ █░█ ▄
+        """)
 
 
 def print_cell(board):
-    blankBoard = """"
+    blankBoard = """
           #################################
           #x1 o1 o1 o1 x1##x2 o2 o2 o2 x2##x3 o3 o3 o3 x3#
           # o1x1   x1o1 ## o2x2   x2o2 ## o3x3   x3o3 #
@@ -29,24 +52,137 @@ def print_cell(board):
         if (board[i] == 'O'):
             blankBoard = blankBoard.replace('o' + str(i), board[i])
             blankBoard = blankBoard.replace('x' + str(i), ' ')
-            blankBoard = blankBoard.replace(str(i), ' ')
+            blankBoard = blankBoard.replace(str(i), '#')
         else:
             if (board[i] == 'X'):
                 blankBoard = blankBoard.replace('x' + str(i), board[i])
                 blankBoard = blankBoard.replace('o' + str(i), ' ')
-                blankBoard = blankBoard.replace(str(i), 'x')
+                blankBoard = blankBoard.replace(str(i), '#')
             else:
                 blankBoard = blankBoard.replace('o' + str(i), ' ')
                 blankBoard = blankBoard.replace('x' + str(i), ' ')
-                #blankBoard = blankBoard.replace(str(i), ' ')
                 
                 
     print(blankBoard)
 
-
-def main():
-    cells = [1,'O',2,'X',4,'O','O',7,8,'X']
-    print_cell(cells)
+def check_move(cells, move):
+        return cells[move] == move
     
+    
+def make_move(cells, turn):
+    
+    if (turn % 2) != 0:
+        print("""    
+            █▀█ █░░ ▄▀█ █▄█ █▀▀ █▀█   ▄█   █▀▄▀█ █▀█ █░█ █▀▀ █
+            █▀▀ █▄▄ █▀█ ░█░ ██▄ █▀▄   ░█   █░▀░█ █▄█ ▀▄▀ ██▄ ▄
+            """)
+        move = int(input())
+        if check_move(cells, move):
+            cells[move] = 'X'
+            return turn + 1
+        else :
+            print("Invalid move")
+    else :
+        print("""
+            █▀█ █░░ ▄▀█ █▄█ █▀▀ █▀█   ▀█   █▀▄▀█ █▀█ █░█ █▀▀ █
+            █▀▀ █▄▄ █▀█ ░█░ ██▄ █▀▄   █▄   █░▀░█ █▄█ ▀▄▀ ██▄ ▄
+            """)
+        move = int(input())
+        if check_move(cells, move):
+            cells[move] = 'O'
+            return turn + 1
+        else :
+            print("Invalid move")
+    
+    return turn     
+    
+
+def check_win(cells):
+    if cells[1] == cells[2] == cells[3] == 'X' or cells[1] == cells[2] == cells[3] == 'O':
+        return cells[1]
+    if cells[4] == cells[5] == cells[6] == 'X' or cells[4] == cells[5] == cells[6] == 'O':
+        return cells[4]
+    if cells[7] == cells[8] == cells[9] == 'X' or cells[7] == cells[8] == cells[9] == 'O':
+        return cells[7]
+    if cells[1] == cells[4] == cells[7] == 'X' or cells[1] == cells[4] == cells[7] == 'O':
+        return cells[1]
+    if cells[2] == cells[5] == cells[8] == 'X' or cells[2] == cells[5] == cells[8] == 'O':
+        return cells[2]
+    if cells[3] == cells[6] == cells[9] == 'X' or cells[3] == cells[6] == cells[9] == 'O':
+        return cells[3]
+    if cells[1] == cells[5] == cells[9] == 'X' or cells[3] == cells[6] == cells[9] == 'O':
+        return cells[1]
+    if cells[3] == cells[5] == cells[7] == 'X' or cells[3] == cells[5] == cells[7] == 'O':
+        return cells[3]
+    
+    return 0
+    
+            
+def print_winner(winner):
+    if winner == 'X':
+        print("""           
+            ██████╗░██╗░░░░░░█████╗░██╗░░░██╗███████╗██████╗░  ░░███╗░░
+            ██╔══██╗██║░░░░░██╔══██╗╚██╗░██╔╝██╔════╝██╔══██╗  ░████║░░
+            ██████╔╝██║░░░░░███████║░╚████╔╝░█████╗░░██████╔╝  ██╔██║░░
+            ██╔═══╝░██║░░░░░██╔══██║░░╚██╔╝░░██╔══╝░░██╔══██╗  ╚═╝██║░░
+            ██║░░░░░███████╗██║░░██║░░░██║░░░███████╗██║░░██║  ███████╗
+            ╚═╝░░░░░╚══════╝╚═╝░░╚═╝░░░╚═╝░░░╚══════╝╚═╝░░╚═╝  ╚══════╝
+            """)
+    else :
+        print("""
+            ██████╗░██╗░░░░░░█████╗░██╗░░░██╗███████╗██████╗░  ██████╗░
+            ██╔══██╗██║░░░░░██╔══██╗╚██╗░██╔╝██╔════╝██╔══██╗  ╚════██╗
+            ██████╔╝██║░░░░░███████║░╚████╔╝░█████╗░░██████╔╝  ░░███╔═╝
+            ██╔═══╝░██║░░░░░██╔══██║░░╚██╔╝░░██╔══╝░░██╔══██╗  ██╔══╝░░
+            ██║░░░░░███████╗██║░░██║░░░██║░░░███████╗██║░░██║  ███████╗
+            ╚═╝░░░░░╚══════╝╚═╝░░╚═╝░░░╚═╝░░░╚══════╝╚═╝░░╚═╝  ╚══════╝
+            """)
+        
+    print("""      
+                            ░██╗░░░░░░░██╗██╗███╗░░██╗██╗
+                            ░██║░░██╗░░██║██║████╗░██║██║
+                            ░╚██╗████╗██╔╝██║██╔██╗██║██║
+                            ░░████╔═████║░██║██║╚████║╚═╝
+                            ░░╚██╔╝░╚██╔╝░██║██║░╚███║██╗
+                            ░░░╚═╝░░░╚═╝░░╚═╝╚═╝░░╚══╝╚═╝
+            """)
+    
+
+def print_draw(winner):       
+    print("""
+        ██╗████████╗██╗░██████╗  ██████╗░██████╗░░█████╗░░██╗░░░░░░░██╗
+        ██║╚══██╔══╝╚█║██╔════╝  ██╔══██╗██╔══██╗██╔══██╗░██║░░██╗░░██║
+        ██║░░░██║░░░░╚╝╚█████╗░  ██║░░██║██████╔╝███████║░╚██╗████╗██╔╝
+        ██║░░░██║░░░░░░░╚═══██╗  ██║░░██║██╔══██╗██╔══██║░░████╔═████║░
+        ██║░░░██║░░░░░░██████╔╝  ██████╔╝██║░░██║██║░░██║░░╚██╔╝░╚██╔╝░
+        ╚═╝░░░╚═╝░░░░░░╚═════╝░  ╚═════╝░╚═╝░░╚═╝╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░
+            """)
+        
+def main():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    cells = [1,1,2,3,4,5,6,7,8,9]
+    turn = 1
+    winner = 0
+    __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    win = os.path.join(__location__, 'win.mp3')
+    draw = os.path.join(__location__, 'game_over.wav')
+    
+    print_intro()
+    time.sleep(3)
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print(win)
+    while turn < 10 and winner == 0:    
+        print_cell(cells)
+        turn = make_move(cells, turn)
+        os.system('cls' if os.name == 'nt' else 'clear')
+        winner = check_win(cells)
+    
+    if turn == 10:
+        print_draw(winner)
+        playsound(draw)
+    else: 
+        print_winner(winner)
+        playsound(win)
+                
 
 main()

@@ -188,7 +188,7 @@ def check_results(player, computer):
     print("\n\n\n")
     print("""  
         █▀▀ █▀█ █▀▄▀█ █▀█ █░█ ▀█▀ █▀▀ █▀█
-        █▄▄ █▀▀ █░▀░█ █▀▀ █▄█ ░█░ ██▄ █▀▄
+        █▄▄ █▄█ █░▀░█ █▀▀ █▄█ ░█░ ██▄ █▀▄
     """)
     print_symbol_game(computer)
     
